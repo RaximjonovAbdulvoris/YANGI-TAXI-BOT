@@ -26,9 +26,9 @@ from bot.config import ARCHIVE_GROUP
 logger = logging.getLogger(__name__)
 
 READY_TEXT = (
-    "✅ WB TAXI LEGENDA ga arizangiz muvaffaqiyatli qabul qilindi!\n\n"
-    "📩 Iltimos, SMS xabarnomani kuting.  \n"
-    "Agar savollaringiz bo‘lsa, @WBLEGENDATAXI orqali murojaat qilishingiz mumkin."
+    "✅ <b>YANGI TAXI’ga arizangiz muvaffaqiyatli qabul qilindi!</b>\n\n"
+    "📞 Tez orada operatorlarimiz siz bilan bog‘lanishadi.\n\n"
+    "💬 Savollar uchun: <b>@arizalarnamangan</b>"
 )
 
 
@@ -129,6 +129,7 @@ async def on_operator_button(update: Update, context: ContextTypes.DEFAULT_TYPE)
             await context.bot.send_message(
                 chat_id=applicant_id,
                 text=READY_TEXT,
+                parse_mode="HTML",
             )
         except Exception as e:
             logger.warning("ready: could not notify applicant %s: %s", applicant_id, e)
