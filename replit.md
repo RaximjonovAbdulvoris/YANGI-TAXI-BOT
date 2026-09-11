@@ -32,10 +32,9 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 Located in `bot/`. Long-polling Python Telegram bot built with `python-telegram-bot` 21.
 
 - `bot/main.py` — entry point, registers conversation handlers
-- `bot/config.py` — loads `TELEGRAM_BOT_TOKEN`, 4× `DRIVER_GROUP_*`, `BRAND_GROUP` from env
-- `bot/handlers/start.py` — `/start` and main menu (Ariza Tashlash / Brend Ariza)
+- `bot/config.py` — loads `TELEGRAM_BOT_TOKEN`, 4× `DRIVER_GROUP_*`, and optional `ARCHIVE_GROUP` from env
+- `bot/handlers/start.py` — `/start` and main menu (Ulanish uchun Ariza / Bog'lanish uchun)
 - `bot/handlers/driver.py` — 13-step driver registration: name → phone (button) → docs warning → 8 doc photos (passport, license, tech passport, selfie, litsenziya) → 4 car photos → plate. Sends 2 albums (10-photo docs + 2-photo selfie/litsenziya) to all 4 driver groups.
-- `bot/handlers/brand.py` — branding application: warning (SPARK/NEXIA 3/<2016 not eligible) → name → phone → model → year → color. Sends formatted message to brand group.
 - `bot/templates/` — optional template images (`passport_front.jpg`, etc.) shown to the user when each photo is requested. See `bot/templates/README.md`.
 
 Workflow: `Telegram Bot` (console output, command `python -m bot.main`).

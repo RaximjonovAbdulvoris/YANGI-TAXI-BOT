@@ -2,7 +2,6 @@ from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filters
 
 MENU_DRIVER = "📝 Ulanish uchun Ariza"
-MENU_BRAND = "🎨 Brend Ariza"
 MENU_PAYOUT = "💰 PUL YECHISH BOTI"
 MENU_CONTACT = "Bog'lanish uchun"
 

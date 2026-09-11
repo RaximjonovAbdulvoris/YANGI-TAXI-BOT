@@ -11,8 +11,6 @@ DRIVER_GROUPS = [
     os.environ["DRIVER_GROUP_4"],
 ]
 
-BRAND_GROUP = os.environ["BRAND_GROUP"]
-
 ARCHIVE_GROUP = os.environ.get("ARCHIVE_GROUP", "")
 
 TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "templates")
