@@ -2,7 +2,6 @@ from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filters
 
 MENU_DRIVER = "📝 Ulanish uchun Ariza"
-MENU_PAYOUT = "💰 PUL YECHISH BOTI"
 MENU_CONTACT = "Bog'lanish uchun"
 
 MAIN_KEYBOARD = ReplyKeyboardMarkup(
@@ -22,13 +21,6 @@ CONTACT_TEXT = (
     "✈️ Telegram: @arizalarnamangan"
 )
 
-PAYOUT_TEXT = (
-    "💰 *PUL YECHISH BOTI:* @legendapulbot\n\n"
-    "📞 *PARK NOMERI:* +998781505050\n\n"
-    "✉️ *TELEGRAM ORQALI MUROJAT:* @WBLEGENDATAXI"
-)
-
-
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data.clear()
     await update.message.reply_text(
@@ -37,15 +29,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         reply_markup=MAIN_KEYBOARD,
     )
     return ConversationHandler.END
-
-
-async def show_payout(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(
-        PAYOUT_TEXT,
-        parse_mode="Markdown",
-        reply_markup=MAIN_KEYBOARD,
-        disable_web_page_preview=True,
-    )
 
 
 async def show_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -58,10 +41,6 @@ async def show_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 def build_contact_handler() -> MessageHandler:
     return MessageHandler(filters.Regex(f"^{MENU_CONTACT}$"), show_contact)
-
-
-def build_payout_handler() -> MessageHandler:
-    return MessageHandler(filters.Regex(f"^{MENU_PAYOUT}$"), show_payout)
 
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
