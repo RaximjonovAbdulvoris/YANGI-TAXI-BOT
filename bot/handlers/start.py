@@ -4,16 +4,23 @@ from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filt
 MENU_DRIVER = "📝 Ulanish uchun Ariza"
 MENU_BRAND = "🎨 Brend Ariza"
 MENU_PAYOUT = "💰 PUL YECHISH BOTI"
+MENU_CONTACT = "Bog'lanish uchun"
 
 MAIN_KEYBOARD = ReplyKeyboardMarkup(
-    [[MENU_DRIVER]],
+    [[MENU_DRIVER], [MENU_CONTACT]],
     resize_keyboard=True,
 )
 
 WELCOME_TEXT = (
     "🚖 *WB TAXI LEGENDA* botiga xush kelibsiz!\n\n"
-    "Ariza yuborish uchun quyidagi tugmani bosing:\n\n"
-    "📝 *Ulanish uchun Ariza* — Haydovchilik uchun ariza"
+    "Quyidagi menyulardan birini tanlang:\n\n"
+    "📝 *Ulanish uchun Ariza* — Haydovchilik uchun ariza\n"
+    "*Bog'lanish uchun* — Aloqa ma'lumotlari"
+)
+
+CONTACT_TEXT = (
+    "📞 Aloqa: +998 33 113-80-85 | +998 33 920-44-44\n"
+    "✈️ Telegram: @arizalarnamangan"
 )
 
 PAYOUT_TEXT = (
@@ -40,6 +47,18 @@ async def show_payout(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         reply_markup=MAIN_KEYBOARD,
         disable_web_page_preview=True,
     )
+
+
+async def show_contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(
+        CONTACT_TEXT,
+        reply_markup=MAIN_KEYBOARD,
+        disable_web_page_preview=True,
+    )
+
+
+def build_contact_handler() -> MessageHandler:
+    return MessageHandler(filters.Regex(f"^{MENU_CONTACT}$"), show_contact)
 
 
 def build_payout_handler() -> MessageHandler:
