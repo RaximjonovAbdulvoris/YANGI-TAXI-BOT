@@ -6,16 +6,14 @@ MENU_BRAND = "🎨 Brend Ariza"
 MENU_PAYOUT = "💰 PUL YECHISH BOTI"
 
 MAIN_KEYBOARD = ReplyKeyboardMarkup(
-    [[MENU_DRIVER], [MENU_BRAND], [MENU_PAYOUT]],
+    [[MENU_DRIVER]],
     resize_keyboard=True,
 )
 
 WELCOME_TEXT = (
     "🚖 *WB TAXI LEGENDA* botiga xush kelibsiz!\n\n"
-    "Quyidagi menyulardan birini tanlang:\n\n"
-    "📝 *Ulanish uchun Ariza* — Haydovchilik uchun ariza\n"
-    "🎨 *Brend Ariza* — Mashinangizni brendlash uchun ariza\n"
-    "💰 *PUL YECHISH BOTI* — Pul yechish va aloqa ma'lumotlari"
+    "Ariza yuborish uchun quyidagi tugmani bosing:\n\n"
+    "📝 *Ulanish uchun Ariza* — Haydovchilik uchun ariza"
 )
 
 PAYOUT_TEXT = (
