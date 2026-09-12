@@ -53,7 +53,7 @@ JOIN_GROUP = 13
 REQUIRED_GROUP = "@yangi_taxi_namangan"
 JOIN_KEYBOARD = InlineKeyboardMarkup([
     [InlineKeyboardButton("Guruhga qo‘shilish", url="https://t.me/yangi_taxi_namangan")],
-    [InlineKeyboardButton("A’zolikni tekshirish", callback_data="driver:check_membership")],
+    [InlineKeyboardButton("✅ Tekshirish", callback_data="driver:check_membership")],
 ])
 
 CONTINUE_BTN = "✅ Davom etish"
@@ -127,7 +127,7 @@ async def check_membership(update: Update, context: ContextTypes.DEFAULT_TYPE) -
             await query.answer()
         await update.effective_message.reply_text(
             "A’zolikni hozir tekshirib bo‘lmadi. Iltimos, birozdan keyin "
-            "«A’zolikni tekshirish» tugmasini qayta bosing. "
+            "«✅ Tekshirish» tugmasini qayta bosing. "
             "Muammo davom etsa, @arizalarnamangan orqali bog‘laning.",
             reply_markup=JOIN_KEYBOARD,
         )
@@ -141,9 +141,11 @@ async def check_membership(update: Update, context: ContextTypes.DEFAULT_TYPE) -
             )
             return JOIN_GROUP
         await update.effective_message.reply_text(
-            "Ariza yuborishdan oldin YANGI TAXI guruhimizga qo‘shiling.\n\n"
-            "Yangiliklar va muhim ma’lumotlar shu guruhda beriladi.\n\n"
-            "Guruhga qo‘shilgach, «A’zolikni tekshirish» tugmasini bosing.",
+            "📢 <b>Ariza yuborish uchun avval guruhimizga obuna bo‘ling.</b>\n\n"
+            "1️⃣ Pastdagi <b>“Guruhga qo‘shilish”</b> tugmasini bosing va guruhga a’zo bo‘ling.\n"
+            "2️⃣ So‘ng botga qaytib, <b>“✅ Tekshirish”</b> tugmasini bosing.\n\n"
+            "Obuna tasdiqlangach, <b>ariza yuborishingiz mumkin bo‘ladi.</b> 🚕",
+            parse_mode=ParseMode.HTML,
             reply_markup=JOIN_KEYBOARD,
         )
         return JOIN_GROUP
