@@ -113,8 +113,6 @@ async def start_driver(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
 
 async def check_membership(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     query = update.callback_query
-    if query:
-        await query.answer()
 
     try:
         member = await context.bot.get_chat_member(
@@ -125,6 +123,8 @@ async def check_membership(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         )
     except TelegramError:
         logger.warning("Required group membership check failed")
+        if query:
+            await query.answer()
         await update.effective_message.reply_text(
             "A’zolikni hozir tekshirib bo‘lmadi. Iltimos, birozdan keyin "
             "«A’zolikni tekshirish» tugmasini qayta bosing. "
@@ -134,6 +134,12 @@ async def check_membership(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         return JOIN_GROUP
 
     if not joined:
+        if query:
+            await query.answer(
+                "Iltimos, obuna bo‘lgandan so‘ng ariza tashlashingiz mumkin.",
+                show_alert=True,
+            )
+            return JOIN_GROUP
         await update.effective_message.reply_text(
             "Ariza yuborishdan oldin YANGI TAXI guruhimizga qo‘shiling.\n\n"
             "Yangiliklar va muhim ma’lumotlar shu guruhda beriladi.\n\n"
@@ -143,6 +149,7 @@ async def check_membership(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         return JOIN_GROUP
 
     if query:
+        await query.answer()
         try:
             await query.edit_message_reply_markup(reply_markup=None)
         except TelegramError:
