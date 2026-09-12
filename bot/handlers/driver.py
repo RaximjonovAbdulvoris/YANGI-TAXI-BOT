@@ -3,6 +3,8 @@ import logging
 from html import escape as h
 
 from telegram import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
     InputMediaPhoto,
     KeyboardButton,
     ReplyKeyboardMarkup,
@@ -10,7 +12,9 @@ from telegram import (
     Update,
 )
 from telegram.constants import ParseMode
+from telegram.error import TelegramError
 from telegram.ext import (
+    CallbackQueryHandler,
     CommandHandler,
     ContextTypes,
     ConversationHandler,
@@ -44,6 +48,13 @@ _pending_car_progress_tasks: dict[int, asyncio.Task] = {}
     CAR_PHOTOS,
     CAR_PLATE,
 ) = range(13)
+
+JOIN_GROUP = 13
+REQUIRED_GROUP = "@yangi_taxi_namangan"
+JOIN_KEYBOARD = InlineKeyboardMarkup([
+    [InlineKeyboardButton("Guruhga qo‘shilish", url="https://t.me/yangi_taxi_namangan")],
+    [InlineKeyboardButton("A’zolikni tekshirish", callback_data="driver:check_membership")],
+])
 
 CONTINUE_BTN = "✅ Davom etish"
 CONTINUE_KB = ReplyKeyboardMarkup(
@@ -97,8 +108,47 @@ async def _send_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE,
 
 # -------------------- entry --------------------
 async def start_driver(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    return await check_membership(update, context)
+
+
+async def check_membership(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    query = update.callback_query
+    if query:
+        await query.answer()
+
+    try:
+        member = await context.bot.get_chat_member(
+            chat_id=REQUIRED_GROUP, user_id=update.effective_user.id,
+        )
+        joined = member.status in ("creator", "administrator", "member") or (
+            member.status == "restricted" and member.is_member
+        )
+    except TelegramError:
+        logger.warning("Required group membership check failed")
+        await update.effective_message.reply_text(
+            "A’zolikni hozir tekshirib bo‘lmadi. Iltimos, birozdan keyin "
+            "«A’zolikni tekshirish» tugmasini qayta bosing. "
+            "Muammo davom etsa, @arizalarnamangan orqali bog‘laning.",
+            reply_markup=JOIN_KEYBOARD,
+        )
+        return JOIN_GROUP
+
+    if not joined:
+        await update.effective_message.reply_text(
+            "Ariza yuborishdan oldin YANGI TAXI guruhimizga qo‘shiling.\n\n"
+            "Yangiliklar va muhim ma’lumotlar shu guruhda beriladi.\n\n"
+            "Guruhga qo‘shilgach, «A’zolikni tekshirish» tugmasini bosing.",
+            reply_markup=JOIN_KEYBOARD,
+        )
+        return JOIN_GROUP
+
+    if query:
+        try:
+            await query.edit_message_reply_markup(reply_markup=None)
+        except TelegramError:
+            logger.warning("Could not remove membership check keyboard")
     context.user_data.clear()
-    await update.message.reply_text(
+    await update.effective_message.reply_text(
         "📝 *Haydovchilik uchun ariza*\n\n"
         "Iltimos, *ism va familiyangizni* yozing:",
         parse_mode="Markdown",
@@ -573,6 +623,12 @@ def build_driver_conversation() -> ConversationHandler:
             MessageHandler(filters.Regex(f"^{MENU_DRIVER}$"), start_driver),
         ],
         states={
+            JOIN_GROUP: [
+                CallbackQueryHandler(
+                    check_membership, pattern=r"^driver:check_membership$",
+                ),
+                MessageHandler(~filters.COMMAND, check_membership),
+            ],
             NAME: [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, get_name),
                 MessageHandler(~filters.COMMAND, name_wrong),
